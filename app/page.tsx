@@ -8,5 +8,6 @@ export default function Home() {
                     <p style={{ color: '#666', fontSize: '0.9rem' }}>
                             This is a simplified version without WhatsApp/Twilio dependencies.
                     </p>p>
-              </div>            );
-}</h1>
+              </div>
+            );
+}
