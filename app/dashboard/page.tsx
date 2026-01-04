@@ -18,10 +18,10 @@ export default function Dashboard() {
   };
 
   const stats = [
-    { label: 'תקבולים אשתקד', value: '₪9.79B', change: '+8.2% מאשתקד', icon: '📊', color: '#f97316' },
-    { label: 'שיחות', value: '79', change: '2.4% המרה', icon: '📞', color: '#eab308' },
+    { label: 'תקבולים אשתקד', value: '₪9.79B', change: '+8.2% מאשתקד', icon: '📊', color: '#ff6b35' },
+    { label: 'שיחות', value: '79', change: '2.4% המרה', icon: '📞', color: '#f7931e' },
     { label: 'סך הכנסות', value: '₪13.08B', change: 'סה״כ שנתי', icon: '💰', color: '#22c55e' },
-    { label: 'תחזית רבעונית', value: '₪9.40B', change: 'צפי לרבעון הבא', icon: '📈', color: '#3b82f6' },
+    { label: 'תחזית רבעונית', value: '₪9.40B', change: 'צפי לרבעון הבא', icon: '📈', color: '#ff5722' },
   ];
 
   const managers = [
@@ -34,43 +34,47 @@ export default function Dashboard() {
     <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
       <header style={{
-        backgroundColor: 'white',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         padding: '16px 24px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{
-            width: '48px',
-            height: '48px',
-            background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+            width: '50px',
+            height: '50px',
+            background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
             borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 4px 15px rgba(255, 107, 53, 0.3)'
           }}>
-            <span style={{ fontSize: '24px' }}>🏆</span>
+            <svg viewBox="0 0 100 100" style={{ width: '30px', height: '30px' }} fill="white">
+              <path d="M50 20 C45 25 40 35 42 45 C35 40 25 42 20 50 C25 48 35 48 40 52 C38 58 40 68 50 80 C60 68 62 58 60 52 C65 48 75 48 80 50 C75 42 65 40 58 45 C60 35 55 25 50 20Z"/>
+            </svg>
           </div>
           <div>
-            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#1e293b' }}>הדשבורד שלי</h1>
-            <p style={{ margin: 0, fontSize: '14px', color: '#64748b' }}>פניקס ביטוח - מערכת ניהול קמפיינים</p>
+            <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', color: 'white' }}>פניקס ביטוח</h1>
+            <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>מערכת ניהול קמפיינים</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
           style={{
             padding: '10px 20px',
-            backgroundColor: '#ef4444',
+            background: 'rgba(255,255,255,0.1)',
             color: 'white',
-            border: 'none',
-            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '10px',
             cursor: 'pointer',
-            fontWeight: '600'
+            fontWeight: '500',
+            fontSize: '14px'
           }}
         >
-          התנתק
+          ← יציאה
         </button>
       </header>
 
@@ -78,55 +82,59 @@ export default function Dashboard() {
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
         {/* Campaign Banner */}
         <div style={{
-          background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
-          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff5722 100%)',
+          borderRadius: '20px',
           padding: '32px',
           color: 'white',
           marginBottom: '24px',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          boxShadow: '0 10px 40px rgba(255, 107, 53, 0.3)'
         }}>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{
               display: 'inline-block',
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              padding: '6px 16px',
-              borderRadius: '20px',
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              padding: '8px 20px',
+              borderRadius: '25px',
               fontSize: '14px',
-              marginBottom: '12px'
+              marginBottom: '16px',
+              fontWeight: '600'
             }}>
-              קמפיין פעיל
+              🔥 קמפיין פעיל
             </div>
-            <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 'bold' }}>{campaign.name}</h2>
-            <p style={{ margin: 0, opacity: 0.9 }}>{campaign.subtitle}</p>
+            <h2 style={{ margin: '0 0 8px 0', fontSize: '32px', fontWeight: 'bold' }}>{campaign.name}</h2>
+            <p style={{ margin: 0, opacity: 0.9, fontSize: '16px' }}>{campaign.subtitle}</p>
 
-            <div style={{ display: 'flex', gap: '32px', marginTop: '24px' }}>
+            <div style={{ display: 'flex', gap: '24px', marginTop: '28px' }}>
               <div style={{
                 backgroundColor: 'rgba(255,255,255,0.2)',
-                padding: '16px 24px',
-                borderRadius: '12px',
-                textAlign: 'center'
+                padding: '20px 28px',
+                borderRadius: '16px',
+                textAlign: 'center',
+                backdropFilter: 'blur(10px)'
               }}>
-                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{campaign.totalContacts.toLocaleString()}</div>
-                <div style={{ fontSize: '14px', opacity: 0.9 }}>אנשי קשר</div>
+                <div style={{ fontSize: '36px', fontWeight: 'bold' }}>{campaign.totalContacts.toLocaleString()}</div>
+                <div style={{ fontSize: '14px', opacity: 0.9, marginTop: '4px' }}>אנשי קשר</div>
               </div>
               <div style={{
                 backgroundColor: 'rgba(255,255,255,0.2)',
-                padding: '16px 24px',
-                borderRadius: '12px',
-                textAlign: 'center'
+                padding: '20px 28px',
+                borderRadius: '16px',
+                textAlign: 'center',
+                backdropFilter: 'blur(10px)'
               }}>
-                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{campaign.activeCampaigns}</div>
-                <div style={{ fontSize: '14px', opacity: 0.9 }}>קמפיינים פעילים</div>
+                <div style={{ fontSize: '36px', fontWeight: 'bold' }}>{campaign.activeCampaigns}</div>
+                <div style={{ fontSize: '14px', opacity: 0.9, marginTop: '4px' }}>קמפיינים פעילים</div>
               </div>
             </div>
           </div>
 
-          {/* Decorative circles */}
+          {/* Decorative elements */}
           <div style={{
             position: 'absolute',
-            top: '-50px',
-            left: '-50px',
+            top: '-60px',
+            left: '-60px',
             width: '200px',
             height: '200px',
             backgroundColor: 'rgba(255,255,255,0.1)',
@@ -134,10 +142,10 @@ export default function Dashboard() {
           }}></div>
           <div style={{
             position: 'absolute',
-            bottom: '-30px',
-            right: '-30px',
-            width: '150px',
-            height: '150px',
+            bottom: '-40px',
+            right: '-40px',
+            width: '180px',
+            height: '180px',
             backgroundColor: 'rgba(255,255,255,0.1)',
             borderRadius: '50%'
           }}></div>
@@ -146,32 +154,33 @@ export default function Dashboard() {
         {/* Stats Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: '16px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '20px',
           marginBottom: '24px'
         }}>
           {stats.map((stat, index) => (
             <div key={index} style={{
               backgroundColor: 'white',
-              borderRadius: '16px',
+              borderRadius: '20px',
               padding: '24px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+              border: '1px solid #f1f5f9'
             }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <div>
-                  <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#64748b' }}>{stat.label}</p>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '28px', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#22c55e' }}>{stat.change}</p>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#64748b', fontWeight: '500' }}>{stat.label}</p>
+                  <p style={{ margin: '0 0 6px 0', fontSize: '32px', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#22c55e', fontWeight: '500' }}>{stat.change}</p>
                 </div>
                 <div style={{
-                  width: '48px',
-                  height: '48px',
-                  backgroundColor: `${stat.color}20`,
-                  borderRadius: '12px',
+                  width: '56px',
+                  height: '56px',
+                  backgroundColor: `${stat.color}15`,
+                  borderRadius: '16px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '24px'
+                  fontSize: '28px'
                 }}>
                   {stat.icon}
                 </div>
@@ -183,37 +192,64 @@ export default function Dashboard() {
         {/* Performance by Manager */}
         <div style={{
           backgroundColor: 'white',
-          borderRadius: '16px',
-          padding: '24px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          borderRadius: '20px',
+          padding: '28px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #f1f5f9'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-            <span style={{ fontSize: '20px' }}>📊</span>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#1e293b' }}>ביצועים לפי מנהל יוניט</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px'
+            }}>📊</div>
+            <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#1e293b' }}>ביצועים לפי מנהל יוניט</h3>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
             {managers.map((manager, index) => (
               <div key={index} style={{
-                backgroundColor: '#f8fafc',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center'
+                background: 'linear-gradient(135deg, #fff7ed, #fff)',
+                borderRadius: '16px',
+                padding: '24px',
+                textAlign: 'center',
+                border: '1px solid #fed7aa'
               }}>
-                <p style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                <div style={{
+                  width: '50px',
+                  height: '50px',
+                  background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 12px',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '18px'
+                }}>
+                  {manager.name.charAt(0)}
+                </div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '17px', fontWeight: '700', color: '#1e293b' }}>
                   {manager.name}
                 </p>
-                <p style={{ margin: '0 0 12px 0', fontSize: '12px', color: '#64748b' }}>
-                  ({manager.id})
+                <p style={{ margin: '0 0 16px 0', fontSize: '12px', color: '#94a3b8' }}>
+                  מזהה: {manager.id}
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                   <div>
-                    <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#14b8a6' }}>{manager.contacts}</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>אנשי קשר</p>
+                    <p style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', color: '#ff6b35' }}>{manager.contacts}</p>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748b' }}>אנשי קשר</p>
                   </div>
+                  <div style={{ width: '1px', backgroundColor: '#e2e8f0' }}></div>
                   <div>
-                    <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#14b8a6' }}>{manager.revenue}</p>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>הכנסות</p>
+                    <p style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', color: '#ff6b35' }}>{manager.revenue}</p>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748b' }}>הכנסות</p>
                   </div>
                 </div>
               </div>
@@ -230,51 +266,52 @@ export default function Dashboard() {
         }}>
           <button style={{
             padding: '20px',
-            backgroundColor: '#14b8a6',
+            background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
             color: 'white',
             border: 'none',
-            borderRadius: '12px',
+            borderRadius: '16px',
             cursor: 'pointer',
             fontSize: '16px',
-            fontWeight: '600',
+            fontWeight: '700',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '10px',
+            boxShadow: '0 8px 25px rgba(255, 107, 53, 0.3)'
           }}>
-            <span>📤</span> העלאת קובץ אקסל
+            <span style={{ fontSize: '20px' }}>📤</span> העלאת קובץ אקסל
           </button>
           <button style={{
             padding: '20px',
             backgroundColor: 'white',
             color: '#1e293b',
             border: '2px solid #e2e8f0',
-            borderRadius: '12px',
+            borderRadius: '16px',
             cursor: 'pointer',
             fontSize: '16px',
             fontWeight: '600',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '10px'
           }}>
-            <span>📊</span> צפייה בדוחות
+            <span style={{ fontSize: '20px' }}>📊</span> צפייה בדוחות
           </button>
           <button style={{
             padding: '20px',
             backgroundColor: 'white',
             color: '#1e293b',
             border: '2px solid #e2e8f0',
-            borderRadius: '12px',
+            borderRadius: '16px',
             cursor: 'pointer',
             fontSize: '16px',
             fontWeight: '600',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '10px'
           }}>
-            <span>⚙️</span> הגדרות
+            <span style={{ fontSize: '20px' }}>⚙️</span> הגדרות
           </button>
         </div>
       </main>
@@ -283,8 +320,10 @@ export default function Dashboard() {
       <footer style={{
         textAlign: 'center',
         padding: '24px',
-        color: '#64748b',
-        fontSize: '14px'
+        color: '#94a3b8',
+        fontSize: '14px',
+        borderTop: '1px solid #f1f5f9',
+        marginTop: '40px'
       }}>
         © 2025 Phoenix Insurance. All rights reserved.
       </footer>

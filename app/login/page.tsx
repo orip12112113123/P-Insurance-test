@@ -1,325 +1,216 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '']);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    if (mobileNumber.length < 9) {
-      setError('נא להזין מספר טלפון תקין');
-      return;
-    }
-
+  const handleEnter = () => {
     setLoading(true);
     setTimeout(() => {
-      setLoading(false);
-      setStep('otp');
-    }, 800);
-  };
-
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return;
-    const newOtp = [...otp];
-    newOtp[index] = value.replace(/\D/g, '');
-    setOtp(newOtp);
-
-    if (value && index < 3) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      nextInput?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`);
-      prevInput?.focus();
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    const enteredCode = otp.join('');
-
-    setTimeout(() => {
-      if (enteredCode === '1111') {
-        router.push('/dashboard');
-      } else {
-        setError('קוד שגוי. נסה שוב.');
-        setLoading(false);
-      }
+      router.push('/dashboard');
     }, 500);
-  };
-
-  const handleBackToPhone = () => {
-    setStep('phone');
-    setOtp(['', '', '', '']);
-    setError('');
   };
 
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: 'Arial, sans-serif',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Background decoration */}
+      <div style={{
+        position: 'absolute',
+        top: '-100px',
+        right: '-100px',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%)',
+        borderRadius: '50%'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        bottom: '-150px',
+        left: '-150px',
+        width: '500px',
+        height: '500px',
+        background: 'radial-gradient(circle, rgba(255,87,34,0.1) 0%, transparent 70%)',
+        borderRadius: '50%'
+      }}></div>
+
       <div style={{
         width: '100%',
-        maxWidth: '420px'
+        maxWidth: '440px',
+        position: 'relative',
+        zIndex: 1
       }}>
         {/* Card */}
         <div style={{
-          backgroundColor: 'rgba(30, 41, 59, 0.8)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(26, 26, 46, 0.95)',
+          backdropFilter: 'blur(20px)',
           borderRadius: '24px',
-          padding: '40px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
+          padding: '48px 40px',
+          boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 53, 0.1)',
+          border: '1px solid rgba(255, 107, 53, 0.2)'
         }}>
-          {/* Logo */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          {/* Phoenix Logo */}
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
             <div style={{
-              width: '80px',
-              height: '80px',
-              background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
-              borderRadius: '20px',
+              width: '100px',
+              height: '100px',
+              background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff5722 100%)',
+              borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px',
-              boxShadow: '0 10px 40px rgba(20, 184, 166, 0.3)'
+              margin: '0 auto 24px',
+              boxShadow: '0 15px 50px rgba(255, 107, 53, 0.4)',
+              position: 'relative'
             }}>
-              <span style={{ fontSize: '40px' }}>🏆</span>
+              {/* Phoenix Bird SVG */}
+              <svg viewBox="0 0 100 100" style={{ width: '60px', height: '60px' }} fill="white">
+                <path d="M50 20 C45 25 40 35 42 45 C35 40 25 42 20 50 C25 48 35 48 40 52 C38 58 40 68 50 80 C60 68 62 58 60 52 C65 48 75 48 80 50 C75 42 65 40 58 45 C60 35 55 25 50 20Z"/>
+                <circle cx="50" cy="45" r="5" fill="rgba(255,255,255,0.8)"/>
+              </svg>
             </div>
+
             <h1 style={{
-              margin: '0 0 8px 0',
-              fontSize: '28px',
+              margin: '0 0 12px 0',
+              fontSize: '32px',
               fontWeight: 'bold',
-              color: 'white'
+              background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
             }}>
-              הדשבורד שלי
+              פניקס ביטוח
             </h1>
             <p style={{
               margin: 0,
-              color: '#94a3b8',
-              fontSize: '14px'
+              color: '#8892a6',
+              fontSize: '16px'
             }}>
-              הכניסו את הקובץ הרצונים ובחרו את הקמפיין שלכם
+              מערכת ניהול קמפיינים
             </p>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.2)',
-              border: '1px solid rgba(239, 68, 68, 0.5)',
-              color: '#fca5a5',
-              padding: '12px 16px',
-              borderRadius: '12px',
-              marginBottom: '20px',
-              textAlign: 'center',
-              fontSize: '14px'
+          {/* Divider */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            marginBottom: '32px'
+          }}>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,107,53,0.3), transparent)' }}></div>
+            <span style={{ color: '#ff6b35', fontSize: '20px' }}>🔥</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,107,53,0.3), transparent)' }}></div>
+          </div>
+
+          {/* Welcome Text */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '32px',
+            padding: '20px',
+            backgroundColor: 'rgba(255, 107, 53, 0.08)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 107, 53, 0.15)'
+          }}>
+            <p style={{
+              margin: 0,
+              color: '#c9d1d9',
+              fontSize: '15px',
+              lineHeight: '1.6'
             }}>
-              {error}
-            </div>
-          )}
+              ברוכים הבאים למערכת ניהול הקמפיינים של פניקס
+              <br />
+              <span style={{ color: '#ff6b35' }}>לחץ להמשך</span>
+            </p>
+          </div>
 
-          {/* Phone Step */}
-          {step === 'phone' && (
-            <form onSubmit={handleSendOTP}>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{
-                  display: 'block',
-                  marginBottom: '8px',
-                  color: '#cbd5e1',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}>
-                  🔵 מספר טלפון נייד
-                </label>
-                <input
-                  type="tel"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
-                  placeholder="050-000-0000"
-                  disabled={loading}
-                  dir="ltr"
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                    border: '2px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '12px',
-                    color: 'white',
-                    fontSize: '18px',
-                    textAlign: 'center',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              <p style={{
-                color: '#64748b',
-                fontSize: '12px',
-                textAlign: 'center',
-                marginBottom: '20px'
-              }}>
-                רשומים מראש לביצוע?
-              </p>
-
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.7 : 1,
-                  boxShadow: '0 10px 40px rgba(20, 184, 166, 0.3)'
-                }}
-              >
-                {loading ? '⏳ שולח...' : '➡️ כניסה לדשבורד'}
-              </button>
-            </form>
-          )}
-
-          {/* OTP Step */}
-          {step === 'otp' && (
-            <form onSubmit={handleVerifyOTP}>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{
-                  display: 'block',
-                  marginBottom: '16px',
-                  color: '#cbd5e1',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  textAlign: 'center'
-                }}>
-                  הזן קוד אימות (4 ספרות)
-                </label>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '12px'
-                }} dir="ltr">
-                  {otp.map((digit, index) => (
-                    <input
-                      key={index}
-                      id={`otp-${index}`}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      disabled={loading}
-                      style={{
-                        width: '60px',
-                        height: '70px',
-                        textAlign: 'center',
-                        fontSize: '28px',
-                        fontWeight: 'bold',
-                        backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                        border: '2px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '12px',
-                        color: 'white',
-                        outline: 'none'
-                      }}
-                    />
-                  ))}
-                </div>
-                <p style={{
-                  color: '#64748b',
-                  fontSize: '12px',
-                  textAlign: 'center',
-                  marginTop: '12px'
-                }}>
-                  קוד נשלח ל-{mobileNumber}
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || otp.some(d => !d)}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  cursor: (loading || otp.some(d => !d)) ? 'not-allowed' : 'pointer',
-                  opacity: (loading || otp.some(d => !d)) ? 0.7 : 1,
-                  marginBottom: '12px',
-                  boxShadow: '0 10px 40px rgba(20, 184, 166, 0.3)'
-                }}
-              >
-                {loading ? '⏳ מאמת...' : '✓ כניסה למערכת'}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleBackToPhone}
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  backgroundColor: 'transparent',
-                  color: '#94a3b8',
-                  border: '2px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  cursor: 'pointer'
-                }}
-              >
-                ← חזור
-              </button>
-            </form>
-          )}
+          {/* Enter Button */}
+          <button
+            onClick={handleEnter}
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '18px 24px',
+              background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '20px',
+              fontWeight: '700',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.8 : 1,
+              boxShadow: '0 10px 40px rgba(255, 107, 53, 0.35)',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+          >
+            {loading ? (
+              <>
+                <span style={{
+                  width: '20px',
+                  height: '20px',
+                  border: '3px solid rgba(255,255,255,0.3)',
+                  borderTopColor: 'white',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }}></span>
+                נכנס למערכת...
+              </>
+            ) : (
+              <>
+                כניסה לדשבורד
+                <span style={{ fontSize: '24px' }}>→</span>
+              </>
+            )}
+          </button>
 
           {/* Footer */}
           <div style={{
             marginTop: '32px',
-            paddingTop: '20px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
             textAlign: 'center'
           }}>
             <p style={{
-              color: '#475569',
+              color: '#4a5568',
               fontSize: '12px',
               margin: 0
             }}>
-              © השימוש באתר זה
+              © 2025 Phoenix Insurance. All rights reserved.
             </p>
           </div>
         </div>
+
+        {/* Bottom accent */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '24px',
+          gap: '8px'
+        }}>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#ff6b35', borderRadius: '50%', opacity: 0.6 }}></div>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#f7931e', borderRadius: '50%', opacity: 0.8 }}></div>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#ff5722', borderRadius: '50%', opacity: 0.6 }}></div>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
