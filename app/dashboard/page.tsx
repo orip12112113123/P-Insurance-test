@@ -1,233 +1,293 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface CampaignData {
-  campaignId: string;
-  campaignName: string;
-  campaignDescription?: string;
-  agencyName?: string;
-  phase: string;
-  targetAmount: number;
-  currentProgress: number;
-  progressPercentage: string;
-  compensationAmount: number;
-  dreamVacation?: string;
-  remainingDays: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  notes?: string;
-}
-
-export default function AgencyDashboard() {
+export default function Dashboard() {
   const router = useRouter();
-  const [data, setData] = useState<CampaignData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      const response = await fetch('/api/agency/dashboard');
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          router.push('/login');
-          return;
-        }
-        throw new Error('Failed to fetch data');
-      }
-
-      const result = await response.json();
-      setData(result.data || []);
-    } catch (err) {
-      setError('שגיאה בטעינת הנתונים');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+  const handleLogout = () => {
     router.push('/login');
   };
 
-  const getPhaseLabel = (phase: string) => {
-    const phaseMap: Record<string, string> = {
-      PHASE_1: 'שלב 1',
-      PHASE_2: 'שלב 2',
-      PHASE_3: 'שלב 3',
-      COMPLETED: 'הושלם',
-    };
-    return phaseMap[phase] || phase;
+  // Demo campaign data
+  const campaign = {
+    name: 'מבצע סוף שנה 2025',
+    subtitle: 'באלי - איטליה - פריז על חשבוננו',
+    totalContacts: 3481,
+    activeCampaigns: 24,
   };
 
-  const getPhaseColor = (phase: string) => {
-    const colorMap: Record<string, string> = {
-      PHASE_1: 'bg-blue-100 text-blue-800',
-      PHASE_2: 'bg-yellow-100 text-yellow-800',
-      PHASE_3: 'bg-orange-100 text-orange-800',
-      COMPLETED: 'bg-green-100 text-green-800',
-    };
-    return colorMap[phase] || 'bg-gray-100 text-gray-800';
-  };
+  const stats = [
+    { label: 'תקבולים אשתקד', value: '₪9.79B', change: '+8.2% מאשתקד', icon: '📊', color: '#f97316' },
+    { label: 'שיחות', value: '79', change: '2.4% המרה', icon: '📞', color: '#eab308' },
+    { label: 'סך הכנסות', value: '₪13.08B', change: 'סה״כ שנתי', icon: '💰', color: '#22c55e' },
+    { label: 'תחזית רבעונית', value: '₪9.40B', change: 'צפי לרבעון הבא', icon: '📈', color: '#3b82f6' },
+  ];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">טוען נתונים...</p>
-        </div>
-      </div>
-    );
-  }
+  const managers = [
+    { name: 'צמח גאור', id: '124', contacts: 805, revenue: '₪3.39B' },
+    { name: 'קרן רוטנברלט', id: '1125', contacts: 526, revenue: '₪1.66B' },
+    { name: 'חגי לוד', id: '1216', contacts: 292, revenue: '₪1.46B' },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl font-bold">P</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">פניקס ביטוח</h1>
-                <p className="text-sm text-gray-600">לוח בקרה - סוכנות</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
-            >
-              התנתק
-            </button>
+      <header style={{
+        backgroundColor: 'white',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        padding: '16px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <span style={{ fontSize: '24px' }}>🏆</span>
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#1e293b' }}>הדשבורד שלי</h1>
+            <p style={{ margin: 0, fontSize: '14px', color: '#64748b' }}>פניקס ביטוח - מערכת ניהול קמפיינים</p>
           </div>
         </div>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600'
+          }}
+        >
+          התנתק
+        </button>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+      {/* Main Content */}
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
+        {/* Campaign Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+          borderRadius: '16px',
+          padding: '32px',
+          color: 'white',
+          marginBottom: '24px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{
+              display: 'inline-block',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              padding: '6px 16px',
+              borderRadius: '20px',
+              fontSize: '14px',
+              marginBottom: '12px'
+            }}>
+              קמפיין פעיל
+            </div>
+            <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 'bold' }}>{campaign.name}</h2>
+            <p style={{ margin: 0, opacity: 0.9 }}>{campaign.subtitle}</p>
 
-        {data.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600 text-lg">אין נתוני קמפיין זמינים</p>
+            <div style={{ display: 'flex', gap: '32px', marginTop: '24px' }}>
+              <div style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{campaign.totalContacts.toLocaleString()}</div>
+                <div style={{ fontSize: '14px', opacity: 0.9 }}>אנשי קשר</div>
+              </div>
+              <div style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{campaign.activeCampaigns}</div>
+                <div style={{ fontSize: '14px', opacity: 0.9 }}>קמפיינים פעילים</div>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="space-y-6">
-            {data.map((campaign) => (
-              <div key={campaign.campaignId} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Campaign Header */}
-                <div className="bg-gradient-to-r from-primary to-primary-dark text-white p-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h2 className="text-2xl font-bold mb-2">{campaign.campaignName}</h2>
-                      {campaign.agencyName && (
-                        <p className="text-blue-100">{campaign.agencyName}</p>
-                      )}
-                      {campaign.campaignDescription && (
-                        <p className="text-blue-100 text-sm mt-1">{campaign.campaignDescription}</p>
-                      )}
-                    </div>
-                    <div className="text-left">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getPhaseColor(campaign.phase)}`}>
-                        {getPhaseLabel(campaign.phase)}
-                      </span>
-                    </div>
-                  </div>
+
+          {/* Decorative circles */}
+          <div style={{
+            position: 'absolute',
+            top: '-50px',
+            left: '-50px',
+            width: '200px',
+            height: '200px',
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%'
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            bottom: '-30px',
+            right: '-30px',
+            width: '150px',
+            height: '150px',
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%'
+          }}></div>
+        </div>
+
+        {/* Stats Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
+          {stats.map((stat, index) => (
+            <div key={index} style={{
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              padding: '24px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <div>
+                  <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#64748b' }}>{stat.label}</p>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '28px', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</p>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#22c55e' }}>{stat.change}</p>
                 </div>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  backgroundColor: `${stat.color}20`,
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  {stat.icon}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                {/* Campaign Details */}
-                <div className="p-6">
-                  {/* Remaining Days Card */}
-                  <div className="bg-gradient-to-br from-secondary to-secondary-dark text-white rounded-lg p-6 mb-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm opacity-90 mb-1">ימים נותרים</p>
-                        <p className="text-4xl font-bold">{campaign.remainingDays}</p>
-                      </div>
-                      <div className="text-left">
-                        <svg className="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <p className="text-xs opacity-75 mt-2">
-                      תאריך סיום: {new Date(campaign.endDate).toLocaleDateString('he-IL')}
-                    </p>
+        {/* Performance by Manager */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          padding: '24px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+            <span style={{ fontSize: '20px' }}>📊</span>
+            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#1e293b' }}>ביצועים לפי מנהל יוניט</h3>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+            {managers.map((manager, index) => (
+              <div key={index} style={{
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px',
+                padding: '20px',
+                textAlign: 'center'
+              }}>
+                <p style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                  {manager.name}
+                </p>
+                <p style={{ margin: '0 0 12px 0', fontSize: '12px', color: '#64748b' }}>
+                  ({manager.id})
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                  <div>
+                    <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#14b8a6' }}>{manager.contacts}</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>אנשי קשר</p>
                   </div>
-
-                  {/* Progress Bar */}
-                  <div className="mb-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-700">התקדמות</span>
-                      <span className="text-sm font-bold text-primary">{campaign.progressPercentage}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-primary to-primary-dark h-full rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(parseFloat(campaign.progressPercentage), 100)}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between mt-2 text-sm text-gray-600">
-                      <span>₪{campaign.currentProgress.toLocaleString('he-IL')}</span>
-                      <span>מתוך ₪{campaign.targetAmount.toLocaleString('he-IL')}</span>
-                    </div>
+                  <div>
+                    <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#14b8a6' }}>{manager.revenue}</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>הכנסות</p>
                   </div>
-
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <p className="text-sm text-blue-600 mb-1">יעד קמפיין</p>
-                      <p className="text-2xl font-bold text-blue-900">
-                        ₪{campaign.targetAmount.toLocaleString('he-IL')}
-                      </p>
-                    </div>
-
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <p className="text-sm text-green-600 mb-1">פיצוי צבור</p>
-                      <p className="text-2xl font-bold text-green-900">
-                        ₪{campaign.compensationAmount.toLocaleString('he-IL')}
-                      </p>
-                    </div>
-
-                    {campaign.dreamVacation && (
-                      <div className="bg-purple-50 rounded-lg p-4 md:col-span-2">
-                        <p className="text-sm text-purple-600 mb-1">חופשת החלומות שלך</p>
-                        <p className="text-xl font-bold text-purple-900 flex items-center gap-2">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {campaign.dreamVacation}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Notes */}
-                  {campaign.notes && (
-                    <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <p className="text-sm font-medium text-yellow-800 mb-1">הערות</p>
-                      <p className="text-yellow-900">{campaign.notes}</p>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </div>
+
+        {/* Quick Actions */}
+        <div style={{
+          marginTop: '24px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '16px'
+        }}>
+          <button style={{
+            padding: '20px',
+            backgroundColor: '#14b8a6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>📤</span> העלאת קובץ אקסל
+          </button>
+          <button style={{
+            padding: '20px',
+            backgroundColor: 'white',
+            color: '#1e293b',
+            border: '2px solid #e2e8f0',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>📊</span> צפייה בדוחות
+          </button>
+          <button style={{
+            padding: '20px',
+            backgroundColor: 'white',
+            color: '#1e293b',
+            border: '2px solid #e2e8f0',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>⚙️</span> הגדרות
+          </button>
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer style={{
+        textAlign: 'center',
+        padding: '24px',
+        color: '#64748b',
+        fontSize: '14px'
+      }}>
+        © 2025 Phoenix Insurance. All rights reserved.
+      </footer>
     </div>
   );
 }
