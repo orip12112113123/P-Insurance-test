@@ -45,15 +45,14 @@ export default function Dashboard() {
           <div style={{
             width: '50px',
             height: '50px',
-            background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
-            borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 4px 15px rgba(255, 107, 53, 0.3)'
+            justifyContent: 'center'
           }}>
-            <svg viewBox="0 0 100 100" style={{ width: '30px', height: '30px' }} fill="white">
-              <path d="M50 20 C45 25 40 35 42 45 C35 40 25 42 20 50 C25 48 35 48 40 52 C38 58 40 68 50 80 C60 68 62 58 60 52 C65 48 75 48 80 50 C75 42 65 40 58 45 C60 35 55 25 50 20Z"/>
+            <svg viewBox="0 0 100 100" style={{ width: '45px', height: '45px' }}>
+              <path d="M75 25 Q85 35 80 50 Q75 65 55 75 Q40 82 30 75 Q20 68 25 55 Q28 45 40 40 Q50 36 60 40 Q55 30 60 22 Q65 15 75 25Z" fill="#ff6b35"/>
+              <path d="M45 45 Q55 40 65 45 Q70 50 65 60 Q58 70 45 72 Q35 73 32 65 Q30 55 45 45Z" fill="#f7931e"/>
+              <path d="M20 60 Q10 55 5 45 Q3 35 15 40 Q25 45 30 55 Q28 62 20 60Z" fill="#1e3a8a"/>
             </svg>
           </div>
           <div>
