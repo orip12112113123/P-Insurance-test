@@ -1,192 +1,199 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [otp, setOtp] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
 
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setMessage('');
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobileNumber }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'שגיאה בשליחת קוד אימות');
-        return;
-      }
-
-      setMessage('קוד אימות נשלח בהצלחה לוואטסאפ');
-      setStep('otp');
-    } catch (err) {
-      setError('שגיאת שרת. נסה שוב מאוחר יותר.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobileNumber, otp }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'קוד אימות שגוי');
-        return;
-      }
-
-      // Redirect based on role
-      if (data.user.role === 'ADMIN') {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard');
-      }
-    } catch (err) {
-      setError('שגיאת שרת. נסה שוב מאוחר יותר.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBackToPhone = () => {
-    setStep('phone');
-    setOtp('');
-    setError('');
-    setMessage('');
+  const handleEnter = () => {
+    router.push('/dashboard');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-        {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <div className="bg-primary w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-white text-3xl font-bold">P</span>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1a 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background decoration */}
+      <div style={{
+        position: 'absolute',
+        top: '-100px',
+        right: '-100px',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%)',
+        borderRadius: '50%'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        bottom: '-150px',
+        left: '-150px',
+        width: '500px',
+        height: '500px',
+        background: 'radial-gradient(circle, rgba(255,87,34,0.1) 0%, transparent 70%)',
+        borderRadius: '50%'
+      }}></div>
+
+      <div style={{
+        width: '100%',
+        maxWidth: '440px',
+        position: 'relative',
+        zIndex: 1
+      }}>
+        {/* Card */}
+        <div style={{
+          backgroundColor: 'rgba(26, 26, 46, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '48px 40px',
+          boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 53, 0.1)',
+          border: '1px solid rgba(255, 107, 53, 0.2)'
+        }}>
+          {/* Phoenix Logo - Matching the actual logo */}
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <div style={{
+              width: '120px',
+              height: '120px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px'
+            }}>
+              {/* Phoenix Bird SVG - Orange with blue accent */}
+              <svg viewBox="0 0 100 100" style={{ width: '100px', height: '100px' }}>
+                {/* Main orange bird body */}
+                <path
+                  d="M75 25 Q85 35 80 50 Q75 65 55 75 Q40 82 30 75 Q20 68 25 55 Q28 45 40 40 Q50 36 60 40 Q55 30 60 22 Q65 15 75 25Z"
+                  fill="#ff6b35"
+                />
+                {/* Wing detail */}
+                <path
+                  d="M45 45 Q55 40 65 45 Q70 50 65 60 Q58 70 45 72 Q35 73 32 65 Q30 55 45 45Z"
+                  fill="#f7931e"
+                />
+                {/* Blue accent tail */}
+                <path
+                  d="M20 60 Q10 55 5 45 Q3 35 15 40 Q25 45 30 55 Q28 62 20 60Z"
+                  fill="#1e3a8a"
+                />
+                {/* Head detail */}
+                <path
+                  d="M70 30 Q78 28 82 35 Q85 42 78 45 Q72 47 68 42 Q65 37 70 30Z"
+                  fill="#ff8c5a"
+                />
+              </svg>
+            </div>
+
+            <h1 style={{
+              margin: '0 0 12px 0',
+              fontSize: '32px',
+              fontWeight: 'bold',
+              background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              פניקס ביטוח
+            </h1>
+            <p style={{
+              margin: 0,
+              color: '#8892a6',
+              fontSize: '16px'
+            }}>
+              מערכת ניהול קמפיינים
+            </p>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            פניקס ביטוח
-          </h1>
-          <p className="text-gray-600">מערכת ניהול קמפיינים</p>
+
+          {/* Divider */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            marginBottom: '32px'
+          }}>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,107,53,0.3), transparent)' }}></div>
+            <span style={{ color: '#ff6b35', fontSize: '20px' }}>🔥</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(255,107,53,0.3), transparent)' }}></div>
+          </div>
+
+          {/* Welcome Text */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '32px',
+            padding: '20px',
+            backgroundColor: 'rgba(255, 107, 53, 0.08)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 107, 53, 0.15)'
+          }}>
+            <p style={{
+              margin: 0,
+              color: '#c9d1d9',
+              fontSize: '15px',
+              lineHeight: '1.6'
+            }}>
+              ברוכים הבאים למערכת ניהול הקמפיינים של פניקס
+              <br />
+              <span style={{ color: '#ff6b35' }}>לחץ להמשך</span>
+            </p>
+          </div>
+
+          {/* Enter Button */}
+          <button
+            onClick={handleEnter}
+            style={{
+              width: '100%',
+              padding: '18px 24px',
+              background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '14px',
+              fontSize: '20px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              boxShadow: '0 10px 40px rgba(255, 107, 53, 0.35)',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+          >
+            כניסה לדשבורד
+            <span style={{ fontSize: '24px' }}>←</span>
+          </button>
+
+          {/* Footer */}
+          <div style={{
+            marginTop: '32px',
+            textAlign: 'center'
+          }}>
+            <p style={{
+              color: '#4a5568',
+              fontSize: '12px',
+              margin: 0
+            }}>
+              © 2025 Phoenix Insurance. All rights reserved.
+            </p>
+          </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-
-        {/* Success Message */}
-        {message && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
-            {message}
-          </div>
-        )}
-
-        {/* Phone Number Step */}
-        {step === 'phone' && (
-          <form onSubmit={handleSendOTP} className="space-y-6">
-            <div>
-              <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                מספר טלפון נייד
-              </label>
-              <input
-                type="tel"
-                id="mobileNumber"
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
-                placeholder="050-123-4567"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                required
-                disabled={loading}
-                dir="ltr"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                קוד אימות יישלח בוואטסאפ
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'שולח...' : 'שלח קוד אימות'}
-            </button>
-          </form>
-        )}
-
-        {/* OTP Verification Step */}
-        {step === 'otp' && (
-          <form onSubmit={handleVerifyOTP} className="space-y-6">
-            <div>
-              <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
-                הזן קוד אימות
-              </label>
-              <input
-                type="text"
-                id="otp"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                placeholder="123456"
-                maxLength={6}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-center text-2xl tracking-widest"
-                required
-                disabled={loading}
-                dir="ltr"
-              />
-              <p className="text-xs text-gray-500 mt-2 text-center">
-                הקוד נשלח ל-{mobileNumber}
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading || otp.length !== 6}
-              className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'מאמת...' : 'אמת והתחבר'}
-            </button>
-
-            <button
-              type="button"
-              onClick={handleBackToPhone}
-              disabled={loading}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition duration-200"
-            >
-              חזור
-            </button>
-          </form>
-        )}
-
-        {/* Footer */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Phoenix Insurance</p>
+        {/* Bottom accent */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '24px',
+          gap: '8px'
+        }}>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#ff6b35', borderRadius: '50%', opacity: 0.6 }}></div>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#f7931e', borderRadius: '50%', opacity: 0.8 }}></div>
+          <div style={{ width: '8px', height: '8px', backgroundColor: '#ff5722', borderRadius: '50%', opacity: 0.6 }}></div>
         </div>
       </div>
     </div>

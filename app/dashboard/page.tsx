@@ -1,233 +1,357 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface CampaignData {
-  campaignId: string;
-  campaignName: string;
-  campaignDescription?: string;
-  agencyName?: string;
-  phase: string;
-  targetAmount: number;
-  currentProgress: number;
-  progressPercentage: string;
-  compensationAmount: number;
-  dreamVacation?: string;
-  remainingDays: number;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  notes?: string;
-}
-
-export default function AgencyDashboard() {
+export default function UnitManagerDashboard() {
   const router = useRouter();
-  const [data, setData] = useState<CampaignData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      const response = await fetch('/api/agency/dashboard');
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          router.push('/login');
-          return;
-        }
-        throw new Error('Failed to fetch data');
-      }
-
-      const result = await response.json();
-      setData(result.data || []);
-    } catch (err) {
-      setError('שגיאה בטעינת הנתונים');
-    } finally {
-      setLoading(false);
-    }
+  // Demo unit manager data
+  const manager = {
+    name: 'צמח גאור',
+    id: '124',
+    phone: '054-1234567',
+    region: 'מרכז',
   };
 
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
+  const campaign = {
+    name: 'מבצע סוף שנה 2025',
+    totalTarget: 5000000, // 5M target
+    currentAmount: 3390000, // 3.39M achieved
+    phase: 2,
+    totalPhases: 3,
+    daysRemaining: 45,
+    endDate: '2025-03-31',
   };
 
-  const getPhaseLabel = (phase: string) => {
-    const phaseMap: Record<string, string> = {
-      PHASE_1: 'שלב 1',
-      PHASE_2: 'שלב 2',
-      PHASE_3: 'שלב 3',
-      COMPLETED: 'הושלם',
-    };
-    return phaseMap[phase] || phase;
+  const phases = [
+    { number: 1, name: 'שלב ראשון', target: 1500000, achieved: 1500000, reward: 'בונוס ₪5,000', completed: true },
+    { number: 2, name: 'שלב שני', target: 3500000, achieved: 3390000, reward: 'טיסה לאיטליה', completed: false, current: true },
+    { number: 3, name: 'שלב שלישי', target: 5000000, achieved: 0, reward: 'חופשה בבאלי', completed: false },
+  ];
+
+  const stats = {
+    totalContacts: 805,
+    successfulCalls: 342,
+    pendingFollowups: 89,
+    conversionRate: 42.5,
   };
 
-  const getPhaseColor = (phase: string) => {
-    const colorMap: Record<string, string> = {
-      PHASE_1: 'bg-blue-100 text-blue-800',
-      PHASE_2: 'bg-yellow-100 text-yellow-800',
-      PHASE_3: 'bg-orange-100 text-orange-800',
-      COMPLETED: 'bg-green-100 text-green-800',
-    };
-    return colorMap[phase] || 'bg-gray-100 text-gray-800';
-  };
+  const recentActivity = [
+    { date: '2025-01-03', action: 'סגירת עסקה', amount: 125000, client: 'חברת אלפא בע"מ' },
+    { date: '2025-01-02', action: 'פגישה', amount: 0, client: 'משה כהן' },
+    { date: '2025-01-01', action: 'סגירת עסקה', amount: 85000, client: 'דוד לוי' },
+  ];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">טוען נתונים...</p>
-        </div>
-      </div>
-    );
-  }
+  const progressPercent = (campaign.currentAmount / campaign.totalTarget) * 100;
+  const phase2Progress = ((campaign.currentAmount - 1500000) / (3500000 - 1500000)) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl font-bold">P</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">פניקס ביטוח</h1>
-                <p className="text-sm text-gray-600">לוח בקרה - סוכנות</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
-            >
-              התנתק
-            </button>
+      <header style={{
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+        padding: '16px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg viewBox="0 0 100 100" style={{ width: '45px', height: '45px' }}>
+              <path d="M75 25 Q85 35 80 50 Q75 65 55 75 Q40 82 30 75 Q20 68 25 55 Q28 45 40 40 Q50 36 60 40 Q55 30 60 22 Q65 15 75 25Z" fill="#ff6b35"/>
+              <path d="M45 45 Q55 40 65 45 Q70 50 65 60 Q58 70 45 72 Q35 73 32 65 Q30 55 45 45Z" fill="#f7931e"/>
+              <path d="M20 60 Q10 55 5 45 Q3 35 15 40 Q25 45 30 55 Q28 62 20 60Z" fill="#1e3a8a"/>
+            </svg>
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: 'white' }}>שלום, {manager.name}</h1>
+            <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>מנהל יוניט | מזהה: {manager.id}</p>
           </div>
         </div>
+        <button
+          onClick={() => router.push('/login')}
+          style={{
+            padding: '10px 20px',
+            background: 'rgba(255,255,255,0.1)',
+            color: 'white',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontWeight: '500',
+            fontSize: '14px'
+          }}
+        >
+          ← יציאה
+        </button>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
+        {/* Campaign Banner with Phase Progress */}
+        <div style={{
+          background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff5722 100%)',
+          borderRadius: '20px',
+          padding: '28px',
+          color: 'white',
+          marginBottom: '24px',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 10px 40px rgba(255, 107, 53, 0.3)'
+        }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+              <div>
+                <div style={{
+                  display: 'inline-block',
+                  backgroundColor: 'rgba(255,255,255,0.25)',
+                  padding: '6px 16px',
+                  borderRadius: '20px',
+                  fontSize: '13px',
+                  marginBottom: '12px',
+                  fontWeight: '600'
+                }}>
+                  🔥 {campaign.name}
+                </div>
+                <h2 style={{ margin: '0 0 8px 0', fontSize: '28px', fontWeight: 'bold' }}>המעמד שלי בקמפיין</h2>
+              </div>
+              <div style={{
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                padding: '16px 24px',
+                borderRadius: '16px',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{campaign.daysRemaining}</div>
+                <div style={{ fontSize: '13px', opacity: 0.9 }}>ימים נותרים</div>
+              </div>
+            </div>
 
-        {data.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-600 text-lg">אין נתוני קמפיין זמינים</p>
+            {/* Overall Progress */}
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
+                <span>התקדמות כללית</span>
+                <span style={{ fontWeight: 'bold' }}>{progressPercent.toFixed(1)}%</span>
+              </div>
+              <div style={{ backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: '10px', height: '12px', overflow: 'hidden' }}>
+                <div style={{
+                  width: `${progressPercent}%`,
+                  height: '100%',
+                  backgroundColor: 'white',
+                  borderRadius: '10px',
+                  transition: 'width 0.5s ease'
+                }}></div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '13px', opacity: 0.9 }}>
+                <span>₪{campaign.currentAmount.toLocaleString()}</span>
+                <span>יעד: ₪{campaign.totalTarget.toLocaleString()}</span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="space-y-6">
-            {data.map((campaign) => (
-              <div key={campaign.campaignId} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Campaign Header */}
-                <div className="bg-gradient-to-r from-primary to-primary-dark text-white p-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h2 className="text-2xl font-bold mb-2">{campaign.campaignName}</h2>
-                      {campaign.agencyName && (
-                        <p className="text-blue-100">{campaign.agencyName}</p>
-                      )}
-                      {campaign.campaignDescription && (
-                        <p className="text-blue-100 text-sm mt-1">{campaign.campaignDescription}</p>
-                      )}
-                    </div>
-                    <div className="text-left">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getPhaseColor(campaign.phase)}`}>
-                        {getPhaseLabel(campaign.phase)}
-                      </span>
-                    </div>
+
+          {/* Decorative */}
+          <div style={{ position: 'absolute', top: '-40px', left: '-40px', width: '150px', height: '150px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
+          <div style={{ position: 'absolute', bottom: '-30px', right: '-30px', width: '120px', height: '120px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
+        </div>
+
+        {/* Phase Progress Cards */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '20px',
+          padding: '28px',
+          marginBottom: '24px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #f1f5f9'
+        }}>
+          <h3 style={{ margin: '0 0 24px 0', fontSize: '20px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '24px' }}>🎯</span> שלבי הקמפיין
+          </h3>
+
+          <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '8px' }}>
+            {phases.map((phase) => (
+              <div key={phase.number} style={{
+                flex: '1',
+                minWidth: '280px',
+                padding: '24px',
+                borderRadius: '16px',
+                border: phase.current ? '2px solid #ff6b35' : '1px solid #e2e8f0',
+                backgroundColor: phase.completed ? '#f0fdf4' : phase.current ? '#fff7ed' : '#f8fafc',
+                position: 'relative'
+              }}>
+                {phase.current && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-10px',
+                    right: '16px',
+                    backgroundColor: '#ff6b35',
+                    color: 'white',
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
+                    נוכחי
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: phase.completed ? '#22c55e' : phase.current ? '#ff6b35' : '#94a3b8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontWeight: 'bold'
+                  }}>
+                    {phase.completed ? '✓' : phase.number}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: '600', color: '#1e293b' }}>{phase.name}</div>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>יעד: ₪{phase.target.toLocaleString()}</div>
                   </div>
                 </div>
 
-                {/* Campaign Details */}
-                <div className="p-6">
-                  {/* Remaining Days Card */}
-                  <div className="bg-gradient-to-br from-secondary to-secondary-dark text-white rounded-lg p-6 mb-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm opacity-90 mb-1">ימים נותרים</p>
-                        <p className="text-4xl font-bold">{campaign.remainingDays}</p>
-                      </div>
-                      <div className="text-left">
-                        <svg className="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
+                {phase.current && (
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
+                      <span style={{ color: '#64748b' }}>התקדמות בשלב</span>
+                      <span style={{ fontWeight: '600', color: '#ff6b35' }}>{phase2Progress.toFixed(0)}%</span>
                     </div>
-                    <p className="text-xs opacity-75 mt-2">
-                      תאריך סיום: {new Date(campaign.endDate).toLocaleDateString('he-IL')}
-                    </p>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="mb-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-700">התקדמות</span>
-                      <span className="text-sm font-bold text-primary">{campaign.progressPercentage}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-primary to-primary-dark h-full rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(parseFloat(campaign.progressPercentage), 100)}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between mt-2 text-sm text-gray-600">
-                      <span>₪{campaign.currentProgress.toLocaleString('he-IL')}</span>
-                      <span>מתוך ₪{campaign.targetAmount.toLocaleString('he-IL')}</span>
+                    <div style={{ backgroundColor: '#fed7aa', borderRadius: '6px', height: '8px', overflow: 'hidden' }}>
+                      <div style={{
+                        width: `${Math.min(phase2Progress, 100)}%`,
+                        height: '100%',
+                        backgroundColor: '#ff6b35',
+                        borderRadius: '6px'
+                      }}></div>
                     </div>
                   </div>
+                )}
 
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <p className="text-sm text-blue-600 mb-1">יעד קמפיין</p>
-                      <p className="text-2xl font-bold text-blue-900">
-                        ₪{campaign.targetAmount.toLocaleString('he-IL')}
-                      </p>
-                    </div>
-
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <p className="text-sm text-green-600 mb-1">פיצוי צבור</p>
-                      <p className="text-2xl font-bold text-green-900">
-                        ₪{campaign.compensationAmount.toLocaleString('he-IL')}
-                      </p>
-                    </div>
-
-                    {campaign.dreamVacation && (
-                      <div className="bg-purple-50 rounded-lg p-4 md:col-span-2">
-                        <p className="text-sm text-purple-600 mb-1">חופשת החלומות שלך</p>
-                        <p className="text-xl font-bold text-purple-900 flex items-center gap-2">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {campaign.dreamVacation}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Notes */}
-                  {campaign.notes && (
-                    <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <p className="text-sm font-medium text-yellow-800 mb-1">הערות</p>
-                      <p className="text-yellow-900">{campaign.notes}</p>
-                    </div>
-                  )}
+                <div style={{
+                  backgroundColor: phase.completed ? '#dcfce7' : '#fef3c7',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{ fontSize: '20px' }}>{phase.completed ? '🎉' : '🎁'}</span>
+                  <span style={{ fontSize: '14px', color: phase.completed ? '#166534' : '#92400e', fontWeight: '500' }}>
+                    {phase.reward}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </div>
+
+        {/* Stats Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
+          {[
+            { label: 'סה"כ אנשי קשר', value: stats.totalContacts, icon: '👥', color: '#3b82f6' },
+            { label: 'שיחות מוצלחות', value: stats.successfulCalls, icon: '✅', color: '#22c55e' },
+            { label: 'ממתינים למעקב', value: stats.pendingFollowups, icon: '📋', color: '#f59e0b' },
+            { label: 'אחוז המרה', value: `${stats.conversionRate}%`, icon: '📈', color: '#8b5cf6' },
+          ].map((stat, index) => (
+            <div key={index} style={{
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              padding: '20px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+              border: '1px solid #f1f5f9'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  backgroundColor: `${stat.color}15`,
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  {stat.icon}
+                </div>
+                <div>
+                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e293b' }}>{stat.value}</div>
+                  <div style={{ fontSize: '13px', color: '#64748b' }}>{stat.label}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Recent Activity */}
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '20px',
+          padding: '28px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          border: '1px solid #f1f5f9'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '20px' }}>📝</span> פעילות אחרונה
+          </h3>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {recentActivity.map((activity, index) => (
+              <div key={index} style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '16px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    backgroundColor: activity.amount > 0 ? '#dcfce7' : '#e0f2fe',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '18px'
+                  }}>
+                    {activity.amount > 0 ? '💰' : '📞'}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: '600', color: '#1e293b' }}>{activity.action}</div>
+                    <div style={{ fontSize: '13px', color: '#64748b' }}>{activity.client}</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'left' }}>
+                  {activity.amount > 0 && (
+                    <div style={{ fontWeight: 'bold', color: '#22c55e' }}>+₪{activity.amount.toLocaleString()}</div>
+                  )}
+                  <div style={{ fontSize: '12px', color: '#94a3b8' }}>{activity.date}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer style={{
+        textAlign: 'center',
+        padding: '24px',
+        color: '#94a3b8',
+        fontSize: '14px',
+        borderTop: '1px solid #f1f5f9',
+        marginTop: '40px'
+      }}>
+        © 2025 Phoenix Insurance. All rights reserved.
+      </footer>
     </div>
   );
 }
